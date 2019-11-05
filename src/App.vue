@@ -4,7 +4,7 @@
  * @Author: Mr. Lin
  * @Date: 2019-06-08 09:35:04
  * @LastEditors: Mr. Lin
- * @LastEditTime: 2019-10-14 14:45:48
+ * @LastEditTime: 2019-11-04 23:36:29
  -->
 <template>
   <div id="app">
@@ -33,8 +33,13 @@ export default {
 </script>
 
 <style>
+
 @import "./assets/css/main.css";
 @import "./assets/css/icon.css";
+.modal-backdrop.in{
+  z-index: 0 !important;
+  opacity: 0;
+}
 .text-has-omit-three {
   display: -webkit-box;
   -webkit-box-orient: vertical;

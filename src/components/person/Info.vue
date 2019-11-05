@@ -4,7 +4,7 @@
  * @Author: Mr. Lin
  * @Date: 2019-06-08 09:54:01
  * @LastEditors: Mr. Lin
- * @LastEditTime: 2019-10-30 20:47:09
+ * @LastEditTime: 2019-11-04 23:57:40
  -->
 <template>
   <div class="info">
@@ -87,13 +87,13 @@
                 </select>
               </div>
             </div>
-            
+
             <!-- <div class="row">
               <div class="col-md-2 col-sm-2 col-xs-3 col-lg-1 mt-2">常用邮箱</div>
               <div class="col-xs-9 col-md-10 col-sm-10 col-lg-9">
                 <input type="text" class="form-control" placeholder="常用的邮箱地址" />
               </div>
-            </div> -->
+            </div>-->
             <div class="row">
               <div class="col-sm-6 col-sm-push-2 col-md-4 col-md-push-2 col-lg-3 col-lg-push-1">
                 <button class="btn btn-primary btn-block" @click="saveInfo">保存信息</button>
@@ -111,11 +111,59 @@
             </div>
             <div class="row">
               <div class="col-md-11 text-is-left">
-                手机号 13075976327
-                <button class="btn btn-success btn-has-margin">修改</button>
+                <strong style="margin-right:10px;">手机号</strong>
+                <span class="text-grey">{{userInfo.phone}}</span>
+                <!-- <button class="btn btn-success btn-has-margin">修改</button> -->
               </div>
             </div>
+
             <div class="row">
+              <div class="col-md-12 flex justify-between has-border align-center">
+                <p>
+                  <strong style="margin-right:10px;">账户余额</strong>
+                  <span>{{userInfo.now_money}}</span>
+                </p>
+                <button class="btn btn-success " style="margin-top:-10px;"   data-toggle="modal"  data-target="#myModal">充值</button>
+              </div>
+            </div>
+
+            <!-- Button trigger modal -->
+            <div
+              id="myModal"
+              class="modal fade"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="gridSystemModalLabel"
+              style="margin-top:2%;"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">充值中心</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-4"><img src="@/assets/money.jpg" alt="" style="height:100%;width:100%;"></div>
+                      <div class="col-md-8">
+                        <p><strong>扫码1元钱,金额随便输入！(本站商品不发货)</strong></p>
+                        <input type="number" v-model.number="addPrice" class="form-control" width="50%" placeholder="请输入充值金额">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="addMoney()">立即充值</button>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <!-- <div class="row">
               <div class="col-md-push-1 col-md-6 mt-3 text-is-left">
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="新的手机号码" />
@@ -130,7 +178,7 @@
                 <button class="btn btn-has-margin" disabled>下一步</button>
                 <button class="btn btn-default btn-has-margin">取消</button>
               </div>
-            </div>
+            </div>-->
             <div class="row">
               <div class="col-md-3 text-is-left">
                 <p>
@@ -186,7 +234,8 @@ export default {
     return {
       userInfo: {},
       addressList: [],
-      currentAdderId: 0
+      currentAdderId: 0,
+      addPrice: '',
     };
   },
   created() {
@@ -195,6 +244,24 @@ export default {
     this.getUserAddress();
   },
   methods: {
+    addMoney() {
+      this.$axios
+        .post(
+          "../crm/ebapi/user_api/user_wechat_recharge",
+          {
+            price: this.addPrice,
+            type: 1
+          },
+          {
+            headers: {
+              token: JSON.parse(sessionStorage.getItem("user")).token
+            }
+          }
+        )
+        .then(res => {
+          this.userInfo.now_money += parseFloat(this.addPrice);
+        });
+    },
     getUserInfo() {
       this.$axios
         .post(
@@ -210,6 +277,7 @@ export default {
           console.log(res);
           this.userInfo = res.data.data;
           this.userInfo["pwd"] = JSON.parse(sessionStorage.getItem("user")).pwd;
+          this.userInfo.now_money = parseFloat(this.userInfo.now_money);
         });
     },
     getUserAddress() {
@@ -233,7 +301,7 @@ export default {
         .post(
           "../crm/ebapi/user_api/edit_user",
           {
-            avatar:'',
+            avatar: "",
             nickname: this.userInfo.nickname
           },
           {
@@ -278,7 +346,7 @@ export default {
           this.currentAdderId = res.data.data.id;
         });
     },
-    
+
     saveInfo() {
       this.changeDefault();
       this.saveNickName();
@@ -290,6 +358,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.has-border {
+  border-bottom: 1px solid rgba(170, 170, 170, 0.5);
+}
 .bg-white-radius {
   background: #fff;
   border-radius: 10px;

@@ -4,7 +4,7 @@
  * @Author: Mr. Lin
  * @Date: 2019-06-08 10:16:35
  * @LastEditors: Mr. Lin
- * @LastEditTime: 2019-10-14 20:16:16
+ * @LastEditTime: 2019-11-04 21:42:23
  -->
 <template>
   <div class="bsconfirmorder">
@@ -104,7 +104,8 @@ export default {
             addressId: this.address.id,
             couponId: "",
             userIntegral: 0,
-            mark: this.mark
+            mark: this.mark,
+            price:this.sumPrice
           },
           {
             headers: {
