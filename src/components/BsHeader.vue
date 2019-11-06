@@ -33,8 +33,12 @@
                 <span></span> 请登入
               </router-link>
               <router-link :to="{name:'bspersonLink'}" v-else>
-                <span></span>
-                {{user.phone}}
+                <span v-if="user.nickname!=null">
+                  {{user.nickname}}
+                </span>
+                <span v-else>
+                  {{user.phone}}
+                </span>
               </router-link>
             </li>
             <li>

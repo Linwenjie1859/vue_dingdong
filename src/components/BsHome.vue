@@ -24,7 +24,7 @@
 
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
-          <div class="item" :class="{'active':index==0}" v-for="(item,index) in homeAllInfo.banner">
+          <div class="item" :class="{'active':index==0}" v-for="(item,index) in homeAllInfo.banner" :key="index">
             <img :src="item.pic" class="img-carousel" />
             <div class="carousel-has-content">
               <h2>一本好书相伴一生</h2>

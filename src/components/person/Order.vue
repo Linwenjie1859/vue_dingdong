@@ -17,6 +17,7 @@
           class="flex flex-direction"
           v-for="(item1,index1) in orderInfo"
           style="margin-bottom:20px;"
+          :key="index1"
         >
           <div class="flex" style="margin-bottom:5px;">
             <span>
@@ -28,6 +29,7 @@
             class="flex align-center justify-between"
             style="margin:0 20px;"
             v-for="(item2,index2) in item1.cartInfo"
+            :key="index2"
           >
             <div class="flex">
               <img
