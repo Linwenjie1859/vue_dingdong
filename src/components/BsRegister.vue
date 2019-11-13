@@ -53,7 +53,7 @@
                 class="form-control"
                 v-model.trim="user.unumber"
                 @blur="$v.user.unumber.$touch()"
-                placeholder="请输入您的账号,账号不可小于6给字符..."
+                placeholder="请输入您的手机号"
                 ref="unumber"
               />
               <span

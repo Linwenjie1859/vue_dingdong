@@ -123,7 +123,7 @@
               <div class="col-md-12 flex justify-between has-border align-center">
                 <p>
                   <strong style="margin-right:10px;">账户余额</strong>
-                  <span>{{userInfo.now_money}}</span>
+                  <span class="text-grey">{{userInfo.now_money}}</span>
                 </p>
                 <button class="btn btn-success " style="margin-top:-10px;"   data-toggle="modal"  data-target="#myModal">充值</button>
               </div>
@@ -150,7 +150,7 @@
                     <div class="row">
                       <div class="col-md-4"><img src="http://bs.vswxx.top/money.jpg" alt="" style="height:100%;width:100%;"></div>
                       <div class="col-md-8">
-                        <p><strong>扫码1元钱,金额随便输入！(本站商品不发货)</strong></p>
+                        <p><strong>扫码1元购,金额随便输入！(本站商品一概不发货)</strong></p>
                         <input type="number" v-model.number="addPrice" class="form-control" width="50%" placeholder="请输入充值金额">
                       </div>
                     </div>
@@ -270,6 +270,10 @@ export default {
     },
     //充值
     addMoney() {
+      if(this.addPrice==''){
+        this.$message('金额充值错误,请重新操作。')
+        return ;
+      }
       this.$axios
         .post(
           "../crm/ebapi/user_api/user_wechat_recharge",
@@ -284,7 +288,6 @@ export default {
           }
         )
         .then(res => {
-     
           this.userInfo.now_money += parseFloat(this.addPrice);
           this.$message('充值成功!');
           setTimeout(() => {
