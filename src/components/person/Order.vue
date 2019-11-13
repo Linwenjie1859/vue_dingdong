@@ -31,15 +31,21 @@
             v-for="(item2,index2) in item1.cartInfo"
             :key="index2"
           >
-            <div class="flex">
+            <div class="flex" @click="toDetail(item2.product_id)">
               <img
                 :src="item2.productInfo.image"
                 alt
                 style="height:80px;width:80px;margin-right:20px;"
               />
               <div class="flex flex-direction justify-around">
-                <span class="text-has-overflow" :title="item2.productInfo.store_name">{{item2.productInfo.store_name}}</span>
-                <span class="text-grey text-has-overflow" :title="item2.productInfo.store_info">{{item2.productInfo.store_info}}</span>
+                <span
+                  class="text-has-overflow"
+                  :title="item2.productInfo.store_name"
+                >{{item2.productInfo.store_name}}</span>
+                <span
+                  class="text-grey text-has-overflow"
+                  :title="item2.productInfo.store_info"
+                >{{item2.productInfo.store_info}}</span>
               </div>
             </div>
 
@@ -49,11 +55,50 @@
               </p>
               <p>{{item2.productInfo.price}}</p>
             </div>
+
+
             <div class="flex flex-direction align-end">
               <span>{{item1.total_price}}</span>
               <span class="text-grey">x{{item2.cart_num}}</span>
             </div>
-            <button class="btn btn-success" @click="toDetail(item2.product_id)">查看详情</button>
+            <div
+              class="flex flex-direction justify-between align-center"
+              v-if="item1.status == 0 && item1.paid == 0"
+            >
+              <span class="text-grey">等待买家付款</span>
+              <button class="btn btn-success">立即付款</button>
+            </div>
+
+            <div
+              class="flex flex-direction justify-between align-center" 
+              v-if="item1.status == 0 && item1.paid == 1"
+            >
+              <span class="text-grey">等待卖家发货</span>
+              <button class="btn btn-success" @click="callSeller">提醒卖家发货</button>
+            </div>
+            <div
+              class="flex flex-direction justify-between align-center"
+              v-if="item1.status == 1 && item1.paid == 1"
+            >
+              <span class="text-grey">卖家已发货</span>
+              <button class="btn btn-success" @click="confirmGood(item1.order_id,index1)">确认收货</button>
+            </div>
+
+            <!-- <div
+              class="flex flex-direction justify-between align-center"
+              v-if="item1.status == 2 && item1.paid == 1"
+            >
+              <span class="text-grey">买家已收货</span>
+              <button class="btn btn-success" @click="confirmGood(item1.id,index1)">评价</button>
+            </div> -->
+
+            <div
+              class="flex flex-direction justify-between align-center"
+              v-if="(item1.status == 3 ||item1.status == 2)&& item1.paid == 1"
+            >
+              <span class="text-grey">交易完成</span>
+              <button class="btn btn-success" @click="toDetail(item2.product_id)">再次购买</button>
+            </div>
           </div>
         </div>
       </div>
@@ -66,6 +111,7 @@ export default {
   name: "order",
   data() {
     return {
+      callFlag:true,
       orderInfo: {}
     };
   },
@@ -73,6 +119,40 @@ export default {
     this.getOrderList();
   },
   methods: {
+    //确认收货
+    confirmGood(id,index){
+       this.$axios
+        .post(
+          "../crm/ebapi/user_api/user_take_order",
+          {
+            uni: id,
+          },
+          {
+            headers: {
+              token: JSON.parse(sessionStorage.getItem("user")).token
+            }
+          }
+        )
+        .then(res => {
+          this.$message('确认成功,欢迎下次在购。');
+          setTimeout(() => {
+            window.location.href = "/bsperson";
+          }, 1000);
+        })
+        .catch(res => {
+          console.log(res);
+        });
+    },
+    //提醒卖家发货
+    callSeller(){
+      if(this.callFlag){
+        this.$message("成功通知卖家发货。");
+        this.callFlag=false;
+      }else{
+          this.$message("已经提醒过卖家。");
+      }
+    },
+    //查看详情
     toDetail(id) {
       this.$router.push({
         name: "bsstoredetailLink",
