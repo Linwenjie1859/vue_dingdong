@@ -19,7 +19,7 @@
           <div class="col-sm-4 col-md-4 col-lg-3 text-center">
             <div class="row">
               <div class="col-sm-11 col-md-11 bg-white-radius text-muted div-has-padding">
-                <img src="http://bs.vswxx.top/a1.png" alt class="userHead" />
+                <img :src="userInfo.avatar" alt class="userHead" />
                 <p>
                   <strong>{{userInfo.nickname}}</strong>
                 </p>
@@ -43,7 +43,8 @@
                 <div class="navbar-collapse">
                   <ul class="nav nav-pills nav-stacked">
                     <li data-toggle="tab" class="active">
-                      <router-link :to="{name:'infoLink'}">个人信息</router-link>
+                      <router-link :to="{name:'infoLink'}">
+                        <span class="cuIcon-people"></span> 个人信息</router-link>
                     </li>
                     <!-- <li data-toggle="tab">
                       <router-link :to="{name:'uploadLink'}">我的上传</router-link>
@@ -55,16 +56,20 @@
                       <router-link :to="{name:'sellsLink'}">发布书籍</router-link>
                     </li> -->
                     <li data-toggle="tab">
-                      <router-link :to="{name:'orderLink'}">我的订单</router-link>
+                      <router-link :to="{name:'orderLink'}">
+                        <span class="cuIcon-formfill "></span> 我的订单</router-link>
+                    </li>
+                    <li data-toggle="tab"> 
+                       <router-link :to="{name:'addressLink'}">
+                         <span class="cuIcon-writefill "></span> 添加地址</router-link>
                     </li>
                     <li data-toggle="tab">
-                      <router-link :to="{name:'addressLink'}">添加地址</router-link>
+                      <router-link :to="{name:'collectLink'}">
+                        <span class="cuIcon-goodsfavor "></span> 我的收藏</router-link>
                     </li>
                     <li data-toggle="tab">
-                      <router-link :to="{name:'collectLink'}">我的收藏</router-link>
-                    </li>
-                    <li data-toggle="tab">
-                      <router-link :to="{name:'shoppingLink'}">购物车</router-link>
+                      <router-link :to="{name:'shoppingLink'}">
+                        <span class="cuIcon-cartfill "></span> 我的购物车</router-link>
                     </li>
                   </ul>
                 </div>
@@ -110,6 +115,7 @@ export default {
         )
         .then(res => {
           this.userInfo=res.data.data;
+          this.userInfo['avatar']=this.userInfo['avatar']?this.userInfo['avatar']:'http://bs.vswxx.top/a1.png';
         });
     }
   }

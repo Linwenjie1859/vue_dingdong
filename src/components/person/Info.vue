@@ -27,8 +27,10 @@
               <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1">
                 <span>个人头像</span>
               </div>
-              <div class="col-xs-9 col-sm-10 col-md-10 col-lg-11">
-                <img src="http://bs.vswxx.top/a1.png" alt class="userHead" />
+              <div class="col-xs-9 col-sm-10 col-md-10 col-lg-11" style="position: relative;">
+                <input type="file" name="filename" id='filename' style="width:90px; height:90px; opacity:0; position: absolute; top:4px;left:20px;" multiple="false" accept="image/*" @change="uploadFile($event)"> 
+                <img :src="userInfo.avatar" alt class="userHead" />
+                <!-- <img src="http://bs.vswxx.top/a1.png" alt class="userHead" /> -->
               </div>
             </div>
             <div class="row">
@@ -244,6 +246,29 @@ export default {
     this.getUserAddress();
   },
   methods: {
+    //上传图片文件
+    uploadFile(event){
+      let file=event.target.files[0];
+      let reader = new FileReader();
+      let that=this;
+      reader.readAsDataURL(file);//将文件已url的形式读入页面
+      reader.onload = function(e) { 
+        // that.userInfo['avatar']=this.result;
+        that.$axios 
+        .post(
+          "../crm/ebapi/public_api/upload_base64",
+          {
+            'filename':this.result
+          },
+        )
+        .then(res => {
+          console.log(res);
+          that.userInfo['avatar']=that.url+res.data.data.url;
+        });
+      }
+ 
+    },
+    //充值
     addMoney() {
       this.$axios
         .post(
@@ -279,8 +304,8 @@ export default {
           }
         )
         .then(res => {
-          console.log(res);
           this.userInfo = res.data.data;
+          this.userInfo['avatar']=this.userInfo['avatar']?this.userInfo['avatar']:'http://bs.vswxx.top/a1.png';
           this.userInfo["pwd"] = JSON.parse(sessionStorage.getItem("user")).pwd;
           this.userInfo.now_money = parseFloat(this.userInfo.now_money);
         });
@@ -297,7 +322,6 @@ export default {
           }
         )
         .then(res => {
-          console.log(res);
           this.addressList = res.data.data;
         });
     },
@@ -306,7 +330,7 @@ export default {
         .post(
           "../crm/ebapi/user_api/edit_user",
           {
-            avatar: "",
+            avatar: this.userInfo.avatar,
             nickname: this.userInfo.nickname
           },
           {
@@ -318,7 +342,6 @@ export default {
         .then(res => {
           let user=JSON.parse(sessionStorage.getItem("user"));
           user.nickname=this.userInfo.nickname;
-          console.log(user);
           sessionStorage.setItem('user',JSON.stringify(user));
           // this.$message("用户昵称保存成功");
         });

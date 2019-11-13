@@ -30,9 +30,10 @@
             </li>
             <li>
               <router-link :to="{name:'bsloginLink'}" v-if="user==null">
-                <span></span> 请登入
+                <span class=""></span> 请登入
               </router-link>
               <router-link :to="{name:'bspersonLink'}" v-else>
+                 <span class="cuIcon-crownfill text-red"></span>
                 <span v-if="user.nickname!='' && user.nickname!=null">{{user.nickname}}</span>
                 <span v-else>{{user.phone}}</span>
               </router-link>
@@ -47,7 +48,7 @@
             </li>
             <li>
               <router-link :to="{name:'bshomeLink'}">
-                <span></span> 叮当商城
+                <span class="cuIcon-homefill text-orange"></span> 叮当商城
               </router-link>
             </li>
             <!-- <li>
@@ -60,17 +61,24 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <router-link :to="{name:'bsstudyroomLink'}">
-                <span></span>叮当云书房
+                <span class="cuIcon-discoverfill text-red"></span>叮当书房
               </router-link>
             </li>
-            <li>
-              <router-link :to="{name:'bspersonLink'}">个人中心</router-link>
+            <li class="hidden-sm">
+              <router-link :to="{name:'bspersonLink'}">
+                <span></span> 个人中心</router-link>
             </li>
             <li>
-              <router-link :to="{name:'orderLink'}">我的订单</router-link>
+              <router-link :to="{name:'shoppingLink'}">
+                <span class="cuIcon-cartfill text-orange"></span> 我的购物车</router-link>
             </li>
-            <li>
-              <router-link :to="{name:'collectLink'}">我的收藏</router-link>
+            <li >
+              <router-link :to="{name:'orderLink'}" >
+                <span class="cuIcon-formfill text-red"></span> 我的订单</router-link>
+            </li>
+            <li class="hidden-sm">
+              <router-link :to="{name:'collectLink'}">
+               我的收藏</router-link>
             </li>
             <!-- <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
