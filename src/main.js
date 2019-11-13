@@ -27,8 +27,8 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
-    // Vue.prototype.url = 'http://www.bs.com/';
-Vue.prototype.url = 'http://www.vswxx.top/';
+Vue.prototype.url = 'http://www.bs.com/';
+// Vue.prototype.url = 'http://www.vswxx.top/';
 
 Vue.prototype.isLogin = function() {
         var that = this;
