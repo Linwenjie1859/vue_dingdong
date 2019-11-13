@@ -20,6 +20,7 @@
                     class="item"
                     :class="{'active':index==0}"
                     v-for="(item,index) in goodsInfo.storeInfo.slider_image"
+                    :key="index"
                   >
                     <img :src="item" class="img-carousel" />
                   </div>
@@ -45,6 +46,7 @@
                 alt
                 style="height:53px;width:53px;"
                 v-for="(item,index) in goodsInfo.storeInfo.slider_image"
+                :key="index"
               />
             </div>
           </div>
@@ -131,7 +133,7 @@
             </div>
             <div class="flex" style="margin-top:30px;">
               <button class="btn btn-danger" style="margin:0 20px;" @click="purchase">立即购买</button>
-              <button class="btn btn-danger">加入购物车</button>
+              <button class="btn btn-danger" @click="addCart">加入购物车</button>
             </div>
           </div>
         </div>
@@ -169,7 +171,26 @@ export default {
     this.getGoodDetail();
   },
   methods: {
-    
+    addCart(){
+      this.$axios
+        .post(
+          "../crm/ebapi/auth_api/set_cart",
+          {
+            productId: this.productId,
+						merId: this.goodsInfo.storeInfo.mer_id,
+						cartNum: this.currentNum,
+          },
+          {
+            headers: {
+              token: JSON.parse(sessionStorage.getItem("user")).token
+            }
+          }
+        )
+        .then(res => {
+          this.$message('添加购物车成功!');
+          console.log(res);
+      });
+    },
     changeCollect() {
       if (this.collectFlag) {
         this.$axios

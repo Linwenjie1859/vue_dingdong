@@ -43,7 +43,7 @@
           <!-- Nav tabs -->
           <div class="col-md-3 text-center">
             <ul class="nav nav-tabs nav-has-border-active" role="tablist">
-              <li v-for="(item1,index1) in categoryList" :class="{'active' : index1==0}">
+              <li v-for="(item1,index1) in categoryList" :class="{'active' : index1==0}" :key="index1">
                 <a
                   :href="'#'+item1.id"
                   aria-controls="networkBook"
@@ -55,6 +55,7 @@
                   <small
                     class="text-muted"
                     v-for="(item2,index2) in item1.child"
+                    :key="index2"
                   >{{item2.cate_name}} &nbsp;</small>
                 </a>
               </li>
@@ -152,6 +153,7 @@
                             class="col-md-4"
                             style="margin:15px 0;"
                             v-for="(item1,index1) in goodsList"
+                            :key="index1"
                           >
                             <div class="flex bg-white radius">
                               <img

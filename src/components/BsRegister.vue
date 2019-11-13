@@ -206,15 +206,18 @@ export default {
             if (res.data.code == 200) {
               this.loginStore(res.data.data);
               this.$message("注册成功");
-              this.$router.push({
-                  name:'bsloginLink',
-                  params: { 
-                    phone: res.data.data.phone,
-                    pwd:this.user.upassword
-                  }
-              });
-            }else{
-               this.$message(res.data.msg);
+
+              this.$axios
+                .post("../crm/ebapi/login/login_by_mobile_pwd", {
+                  phone: this.user.unumber,
+                  pwd: this.user.upassword
+                })
+                .then(res => {
+                  sessionStorage.setItem("user", JSON.stringify(res.data.data));
+                  window.location.href = "/";
+                });
+            } else {
+              this.$message(res.data.msg);
             }
           });
       }

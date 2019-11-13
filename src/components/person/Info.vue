@@ -82,7 +82,7 @@
                 <select name id class="form-control" v-model="currentAdderId">
                   <option
                     :value="item.id"
-                    v-for="(item,index) in addressList"
+                    v-for="(item,index) in addressList" :key="index"
                   >{{item.city}} {{item.district}} {{item.detail}}</option>
                 </select>
               </div>
@@ -146,7 +146,7 @@
                   </div>
                   <div class="modal-body">
                     <div class="row">
-                      <div class="col-md-4"><img src="@/assets/money.jpg" alt="" style="height:100%;width:100%;"></div>
+                      <div class="col-md-4"><img src="http://bs.vswxx.top/money.jpg" alt="" style="height:100%;width:100%;"></div>
                       <div class="col-md-8">
                         <p><strong>扫码1元钱,金额随便输入！(本站商品不发货)</strong></p>
                         <input type="number" v-model.number="addPrice" class="form-control" width="50%" placeholder="请输入充值金额">
@@ -259,7 +259,12 @@ export default {
           }
         )
         .then(res => {
+     
           this.userInfo.now_money += parseFloat(this.addPrice);
+          this.$message('充值成功!');
+          setTimeout(() => {
+              $('#myModal').modal('hide');
+          }, 500);
         });
     },
     getUserInfo() {
@@ -311,7 +316,11 @@ export default {
           }
         )
         .then(res => {
-          this.$message("用户昵称保存成功");
+          let user=JSON.parse(sessionStorage.getItem("user"));
+          user.nickname=this.userInfo.nickname;
+          console.log(user);
+          sessionStorage.setItem('user',JSON.stringify(user));
+          // this.$message("用户昵称保存成功");
         });
     },
     changeDefault() {
@@ -328,7 +337,7 @@ export default {
           }
         )
         .then(res => {
-          this.$message("默认地址保存成功");
+          // this.$message("默认地址保存成功");
         });
     },
     getDefaultAddress() {
@@ -350,7 +359,9 @@ export default {
     saveInfo() {
       this.changeDefault();
       this.saveNickName();
-      location.reload();
+      setTimeout(() => {
+         window.location.href = "/bsperson";
+      }, 1000);
     }
   }
 };

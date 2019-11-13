@@ -17,6 +17,7 @@
           class="flex align-center justify-between"
           style="margin:20px;"
           v-for="(item2,index2) in orderInfo"
+          :key="index2"
         >
           <div class="flex">
             <img :src="item2.image" alt style="height:80px;width:80px;margin-right:20px;" />

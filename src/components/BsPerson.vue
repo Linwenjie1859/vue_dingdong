@@ -32,7 +32,7 @@
                 <p>
                   <small>用户积分:{{userInfo.integral}}</small>
                 </p>
-                <img src="@/assets/vip_icon_gray_small.svg" title="vip特权" alt v-for="vip in vipSorts" />
+                <img src="@/assets/vip_icon_gray_small.svg" title="vip特权" alt v-for="vip in 5"  :key="vip"/>
               </div>
             </div>
             <div class="row mt-5 mb-5">
@@ -63,6 +63,9 @@
                     <li data-toggle="tab">
                       <router-link :to="{name:'collectLink'}">我的收藏</router-link>
                     </li>
+                    <li data-toggle="tab">
+                      <router-link :to="{name:'shoppingLink'}">购物车</router-link>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -90,7 +93,6 @@ export default {
   },
   data() {
     return {
-      vipSorts: [{}, {}, {}, {}, {}],
       userInfo:{}
     };
   },

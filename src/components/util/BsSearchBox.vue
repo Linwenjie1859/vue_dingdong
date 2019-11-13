@@ -36,7 +36,7 @@
               <small class="text-muted hotword">
                 <span class="pull-left">热搜：</span>
                 <ul class="list-unstyled">
-                  <li v-for="hot in hotWord">{{hot.word}}</li>
+                  <li v-for="hot in hotWord" :key="hot.id">{{hot.word}}</li>
                 </ul>
               </small>
             </div>
@@ -44,11 +44,14 @@
         </div>
         <div class="col-md-3 text-right mt-5 visible-md visible-lg">
           <div class="btn-group">
-            <button class="btn btn-danger">
+            <button class="btn btn-danger" @click="pushToCart">
+              <span class="cuIcon-cartfill"></span>
               购物车
-              <span class="badge">0</span>
             </button>
-            <button class="btn btn-default" @click="pushToOrder">我的订单</button>
+             
+            <button class="btn btn-default" @click="pushToOrder">
+               我的订单
+            </button>
           </div>
         </div>
       </div>
@@ -62,9 +65,18 @@ export default {
   data() {
     return {
       hotWord: [
-        { word: "言情小说" },
-        { word: "科幻小说" },
-        { word: "修仙小说" }
+        {
+          word: "言情小说",
+          id: 1
+        },
+        {
+          word: "科幻小说",
+          id: 2
+        },
+        {
+          word: "修仙小说",
+          id: 3
+        }
       ],
       keyWord: ""
     };
@@ -75,10 +87,15 @@ export default {
         this.$router.push({
           name: "bsstudyroomLink",
           params: {
-            keyWord:this.keyWord
+            keyWord: this.keyWord
           }
         });
       }
+    },
+    pushToCart() {
+      this.$router.push({
+        name: "shoppingLink"
+      });
     },
     pushToOrder() {
       this.$router.push({

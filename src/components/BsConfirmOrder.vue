@@ -10,12 +10,13 @@
   <div class="bsconfirmorder">
     <div class="container">
       <strong>确认订单信息</strong>
-      <div class="flex flex-direction" v-for="(item1,index1) in cartInfo">
+      <div class="flex flex-direction" v-for="(item1,index1) in cartInfo" :key="index1">
         <p>店铺: 新华文轩网络书店</p>
         <div
           class="flex align-center justify-between"
           style="padding:5px; border-top:1px solid #f0f0f0; border-bottom:1px solid #f0f0f0;"
           v-for="(item2,index2) in item1.data"
+          :key="index2"
         >
           <div class="flex align-center">
             <img
@@ -63,6 +64,7 @@ export default {
   name: "bsconfirmorder",
   data() {
     return {
+      ids:0,
       cartInfo: [],
       sumPrice: 0,
       orderKey: 0,
@@ -70,7 +72,7 @@ export default {
       address: {}
     };
   },
-  created() {
+  created(e) {
     this.getOrderInfo();
     this.getAddressList();
   },

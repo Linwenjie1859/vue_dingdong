@@ -1,7 +1,7 @@
 <template>
   <div class="bssalesrank">
     <div class="img-thumbnail">
-      <div v-for="book in books">
+      <div v-for="book in books" :key="book">
         <div class="row">
           <div class="col-md-6 mt-3">
             <img src="@/assets/a.jpg" alt />

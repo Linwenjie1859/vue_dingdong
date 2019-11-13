@@ -24,7 +24,7 @@
 
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
-          <div class="item" :class="{'active':index==0}" v-for="(item,index) in homeAllInfo.banner">
+          <div class="item" :class="{'active':index==0}" v-for="(item,index) in homeAllInfo.banner" :key="index">
             <img :src="item.pic" class="img-carousel" />
             <div class="carousel-has-content">
               <h2>一本好书相伴一生</h2>
@@ -59,6 +59,7 @@
             ref="ele"
             @click="toDetail(item.id)"
             v-if="index<12"
+            :key="index"
           >
             <div class="img-thumbnail thumbnail-has-shadow">
               <img :src="item.image" alt />
@@ -86,6 +87,7 @@
             class="col-md-4 has-right-border last-no-border"
             v-for="(item,index) in homeAllInfo.info.bastList"
             style="margin-bottom:20px;"
+            :key="index"
           >
             <span class="badge badge-size badge-color-first">{{index+1}}</span>
             <img :src="item.image" class="userHead" alt   @click="toDetail(item.id)"/>

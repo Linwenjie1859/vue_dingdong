@@ -25,6 +25,7 @@ import Download from '@/components/person/Download'
 import Order from '@/components/person/Order'
 import Sells from '@/components/person/Sells'
 import Collect from '@/components/person/Collect'
+import Shopping from '@/components/person/Shopping'
 Vue.use(Router)
 
 export default new Router({
@@ -55,6 +56,7 @@ export default new Router({
             redirect: "/bsperson/info",
             children: [
                 { path: '/bsperson/address', name: 'addressLink', component: Address },
+                { path: '/bsperson/shopping', name: 'shoppingLink', component: Shopping },
                 { path: '/bsperson/upload', name: 'uploadLink', component: Upload },
                 { path: '/bsperson/download', name: 'downloadLink', component: Download },
                 { path: '/bsperson/order', name: 'orderLink', component: Order },
