@@ -280,7 +280,7 @@ export default {
         this.$message("亲，已经不能再减了");
         return;
       }
-      this.currentNum += num;
+      this.currentNum = parseInt(this.currentNum )+ num;
     }
   }
 };

@@ -133,7 +133,6 @@ export default {
           }
         )
         .then(res => {
-          console.log(res);
           this.$message('添加地址成功!');
           this.realName= "";
           this.phone= "";
@@ -141,6 +140,9 @@ export default {
           this.province= "";
           this.city= "";
           this.district= "";
+          setTimeout(() => {
+            window.location.href = "/bsperson/address";
+          }, 1000);
         })
         .catch(err => {
           console.log(err);

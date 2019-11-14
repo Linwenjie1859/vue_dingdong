@@ -56,7 +56,6 @@
               <p>{{item2.productInfo.price}}</p>
             </div>
 
-
             <div class="flex flex-direction align-end">
               <span>{{item1.total_price}}</span>
               <span class="text-grey">x{{item2.cart_num}}</span>
@@ -70,7 +69,7 @@
             </div>
 
             <div
-              class="flex flex-direction justify-between align-center" 
+              class="flex flex-direction justify-between align-center"
               v-if="item1.status == 0 && item1.paid == 1"
             >
               <span class="text-grey">等待卖家发货</span>
@@ -84,21 +83,78 @@
               <button class="btn btn-success" @click="confirmGood(item1.order_id,index1)">确认收货</button>
             </div>
 
-            <!-- <div
+            <div
               class="flex flex-direction justify-between align-center"
               v-if="item1.status == 2 && item1.paid == 1"
             >
               <span class="text-grey">买家已收货</span>
-              <button class="btn btn-success" @click="confirmGood(item1.id,index1)">评价</button>
-            </div> -->
+              <button
+                class="btn btn-success"
+                data-toggle="modal"
+                data-target="#myModal"
+                @click="getCurrentIndex(index1)"
+              >立即评价</button>
+            </div>
 
             <div
               class="flex flex-direction justify-between align-center"
-              v-if="(item1.status == 3 ||item1.status == 2)&& item1.paid == 1"
+              v-if="item1.status == 3&& item1.paid == 1"
             >
               <span class="text-grey">交易完成</span>
               <button class="btn btn-success" @click="toDetail(item2.product_id)">再次购买</button>
             </div>
+
+            <!-- Button trigger modal -->
+            <div
+              id="myModal"
+              class="modal fade"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="gridSystemModalLabel"
+              style="margin-top:2%;"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">订单评价</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img
+                          :src="orderInfo[currentIndex].cartInfo[0].productInfo.image"
+                          alt
+                          style="height:100%;width:100%;"
+                        />
+                      </div>
+                      <div class="col-md-8">
+                        <p>
+                          <strong>{{orderInfo[currentIndex].cartInfo[0].productInfo.store_name}}</strong>
+                        </p>
+                        <p
+                          class="text-grey"
+                        >{{orderInfo[currentIndex].cartInfo[0].productInfo.store_info}}</p>
+                        <textarea class="form-control" v-model="evaluation"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      @click="toEvaluation(orderInfo[currentIndex].cartInfo[0].unique)"
+                    >立即评价</button>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
           </div>
         </div>
       </div>
@@ -111,21 +167,29 @@ export default {
   name: "order",
   data() {
     return {
-      callFlag:true,
-      orderInfo: {}
+      callFlag: true,
+      orderInfo: {},
+      //当前操作的订单
+      currentIndex: 0,
+      //评价内容
+      evaluation: ""
     };
   },
   created() {
     this.getOrderList();
   },
   methods: {
-    //确认收货
-    confirmGood(id,index){
-       this.$axios
+    //前往评价
+    toEvaluation(unique) {
+      this.$axios
         .post(
-          "../crm/ebapi/user_api/user_take_order",
+          "../crm/ebapi/user_api/user_comment_product",
           {
-            uni: id,
+            unique: unique,
+            comment: this.evaluation,
+            pics: "",
+            product_score: 5,
+            service_score: 5
           },
           {
             headers: {
@@ -134,7 +198,37 @@ export default {
           }
         )
         .then(res => {
-          this.$message('确认成功,欢迎下次在购。');
+          if (res.data.code == 200) {
+            this.$message("评价成功,感谢您的评价。");
+            setTimeout(() => {
+              $("#myModal").modal("hide");
+            }, 500);
+          }
+        })
+        .catch(res => {
+          console.log(res);
+        });
+    },
+    //获取当前操作的下标
+    getCurrentIndex(index) {
+      this.currentIndex = index;
+    },
+    //确认收货
+    confirmGood(id, index) {
+      this.$axios
+        .post(
+          "../crm/ebapi/user_api/user_take_order",
+          {
+            uni: id
+          },
+          {
+            headers: {
+              token: JSON.parse(sessionStorage.getItem("user")).token
+            }
+          }
+        )
+        .then(res => {
+          this.$message("确认成功,欢迎下次在购。");
           setTimeout(() => {
             window.location.href = "/bsperson";
           }, 1000);
@@ -144,12 +238,12 @@ export default {
         });
     },
     //提醒卖家发货
-    callSeller(){
-      if(this.callFlag){
+    callSeller() {
+      if (this.callFlag) {
         this.$message("成功通知卖家发货。");
-        this.callFlag=false;
-      }else{
-          this.$message("已经提醒过卖家。");
+        this.callFlag = false;
+      } else {
+        this.$message("已经提醒过卖家。");
       }
     },
     //查看详情
@@ -178,8 +272,8 @@ export default {
           }
         )
         .then(res => {
-          console.log(res);
           this.orderInfo = res.data.data;
+          console.log(this.orderInfo);
         })
         .catch(res => {
           console.log(res);
